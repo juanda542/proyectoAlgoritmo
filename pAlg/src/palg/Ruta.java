@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package palg;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
@@ -35,8 +34,8 @@ public class Ruta {
         return arcos.get(i);
     }
 
-    public double getCostoTotal() {
-        return costoTotal;
+        public int getCostoTotal() {
+            return costoTotal;
     }
 
     public boolean estaVacia() {

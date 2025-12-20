@@ -6,15 +6,20 @@ package palg;
 public class Paradero {
     private final int id;
     private final String nombre;
-
+    private final int x;
+    private final int y;
     /**
      * Crea un Paradero.
      * @param id identificador único del paradero
      * @param nombre nombre descriptivo (p. ej. "Paradero A")
+     * @param x cordenada x en la interfaz grafica
+     * @param y cordenada y en la interfaz grafica
      */
-    public Paradero(int id, String nombre) {
+    public Paradero(int id, String nombre,int x,int y) {
         this.id = id;
         this.nombre = nombre;
+        this.x = x;
+        this.y = y;
     }
 
     /** Retorna el id del paradero. */
@@ -51,4 +56,13 @@ public class Paradero {
         Paradero other = (Paradero) o;
         return this.id == other.id;
     }
+    
+    public int getX() { 
+        return x;
+    }
+    
+    public int getY(){ 
+        return y; 
+    }
+
 }
