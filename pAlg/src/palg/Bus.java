@@ -27,15 +27,16 @@ public class Bus {
     private int tiempoAcumuladoMin;
     private int tiempoRestanteArco;
 
-    public Bus(int id, Paradero paraderoOrigen, Paradero paraderoLlegada, List<Arco> rutaIda, List<Arco> rutaVuelta) {
+    //Cambie constructor, se debe construir con OBJETOS RUTA, no LIST<ARCO>
+    public Bus(int id, Paradero paraderoOrigen, Paradero paraderoLlegada, Ruta rutaIda, Ruta rutaVuelta) {
         this.id = id;
         this.paraderoOrigen = paraderoOrigen;
         this.paraderoLlegada = paraderoLlegada;
         this.paraderoActual = paraderoOrigen;
 
         // Idealmente estas rutas las entrega el Grafo
-        this.rutaIda = new Ruta(rutaIda);
-        this.rutaVuelta = new Ruta(rutaVuelta);
+        this.rutaIda = rutaIda;
+        this.rutaVuelta = rutaVuelta;
 
         this.arcoActual = null;
         this.indiceActual = 0;
