@@ -1,0 +1,59 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package proyectoalgoritmo;
+
+/**
+ *
+ * @author juand
+ */
+public class Paradero implements Displayable {
+    private final int id;
+    private final String nombre;
+    private final int x;
+    private final int y;
+
+    public Paradero(int id, String nombre, int x, int y) {
+        this.id = id;
+        this.nombre = nombre;
+        this.x = x;
+        this.y = y;
+    }
+    /** Retorna el id del paradero. */
+    public int getId() {
+        return id;
+    }
+    /** Retorna el nombre del paradero. */
+    public String getNombre() {
+        return nombre;
+    }
+    /**
+     * toString legible para imprimir en consola.
+     */
+    @Override
+    public String toString() {
+        return nombre + " (ID:" + id + ")";
+    }
+    /**
+     * HashCode y equals implementados solo por id.
+     * Esto permite usar Paradero como clave en HashMap o Set.
+     */
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Paradero)) return false;
+        Paradero other = (Paradero) o;
+        return this.id == other.id;
+    }
+    
+    
+    @Override public int getX() { return x; }
+    @Override public int getY() { return y; }
+    @Override public String getName() { return nombre; }
+}
