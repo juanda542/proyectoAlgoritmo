@@ -16,7 +16,7 @@ public class GrafoDirigido {
         adyacencia.putIfAbsent(p, new ArrayList<>());
     }
 
-    public void agregarArco(int idOrigen, int idDestino, double peso) {
+    public void agregarArco(int idOrigen, int idDestino, int peso) {
         Paradero o = paraderos.get(idOrigen);
         Paradero d = paraderos.get(idDestino);
         if (o == null || d == null) {
@@ -39,27 +39,27 @@ public class GrafoDirigido {
         Paradero destino = paraderos.get(idDestino);
         if (origen == null || destino == null) return null;
 
-        Map<Paradero, Double> dist = new HashMap<>();
+        Map<Paradero, Integer> dist = new HashMap<>();
         Map<Paradero, Paradero> prev = new HashMap<>();
-        PriorityQueue<Paradero> pq = new PriorityQueue<>(Comparator.comparingDouble(dist::get));
+        PriorityQueue<Paradero> pq = new PriorityQueue<>(Comparator.comparingInt(dist::get)); // cambie comparingInteger a comparingInt
 
         for (Paradero p : adyacencia.keySet()) {
-            dist.put(p, Double.POSITIVE_INFINITY);
+            dist.put(p, Integer.MAX_VALUE); // Cambie POSITIVE_INFINITY (de double) a MAX_VALUE (de int)
             prev.put(p, null);
         }
-        dist.put(origen, 0.0);
+        dist.put(origen, 0);
 
         pq.add(origen);
 
         while (!pq.isEmpty()) {
             Paradero u = pq.poll();
-            double du = dist.get(u);
-            if (du == Double.POSITIVE_INFINITY) break;
+            int du = dist.get(u);
+            if (du == Integer.MAX_VALUE) break;  // Cambie POSITIVE_INFINITY (de double) a MAX_VALUE (de int)
             if (u.equals(destino)) break;
 
             for (Arco arco : adyacencia.getOrDefault(u, Collections.emptyList())) {
                 Paradero v = arco.getDestino();
-                double alt = du + arco.getPeso();
+                int alt = du + arco.getPeso();
                 if (alt < dist.get(v)) {
                     dist.put(v, alt);
                     prev.put(v, u);
@@ -75,13 +75,25 @@ public class GrafoDirigido {
         }
 
         // reconstruir ruta
-        LinkedList<Paradero> path = new LinkedList<>();
-        Paradero step = destino;
-        while (step != null) {
-            path.addFirst(step);
-            step = prev.get(step);
+        // cambie este bloque para construir una lista de ARCOS
+        LinkedList<Arco> arcosRuta = new LinkedList<>();
+        Paradero actual = destino;
+
+        while (prev.get(actual) != null) {
+            Paradero anterior = prev.get(actual);
+
+            // buscar el arco anterior -> actual
+            for (Arco a : adyacencia.get(anterior)) {
+                if (a.getDestino().equals(actual)) {
+                    arcosRuta.addFirst(a);
+                    break;
+                }
+            }
+
+        actual = anterior;
         }
-        Ruta ruta = new Ruta(path, dist.get(destino));
+
+        Ruta ruta = new Ruta(arcosRuta, dist.get(destino));
         return ruta;
     }
 
@@ -95,40 +107,56 @@ public class GrafoDirigido {
 
         Set<String> evitados = new HashSet<>(); // "oId->dId" form to avoid same removal
 
+        //Arreglada para que funcione con ARCOS
         for (int i = 0; i < k - 1; i++) {
             Ruta base = resultados.get(i);
-            List<Paradero> nodos = base.getNodos();
+            List<Arco> arcos = base.getTramos();
             boolean encontrada = false;
 
-            for (int j = 0; j < nodos.size() - 1 && !encontrada; j++) {
-                Paradero a = nodos.get(j);
-                Paradero b = nodos.get(j + 1);
+            for (int j = 0; j < arcos.size() && !encontrada; j++) {
+
+                Arco arcoActual = arcos.get(j);
+                Paradero a = arcoActual.getOrigen();
+                Paradero b = arcoActual.getDestino();
+
                 String key = a.getId() + "->" + b.getId();
-                if (evitados.contains(key)) continue;
+                if (evitados.contains(key)) {
+                    continue;
+                }
 
                 // eliminar temporalmente arco a->b
                 List<Arco> lista = adyacencia.get(a);
                 Arco removido = null;
-                for (Iterator<Arco> it = lista.iterator(); it.hasNext(); ) {
+
+                for (Iterator<Arco> it = lista.iterator(); it.hasNext();) {
                     Arco ar = it.next();
-                    if (ar.getDestino().equals(b)) { removido = ar; it.remove(); break; }
+                    if (ar.equals(arcoActual)) {
+                        removido = ar;
+                        it.remove();
+                        break;
+                    }
                 }
 
                 Ruta alternativa = dijkstra(idOrigen, idDestino);
+
                 // restaurar arco
-                if (removido != null) adyacencia.get(a).add(removido);
+                if (removido != null) {
+                    adyacencia.get(a).add(removido);
+                }
 
                 evitados.add(key);
 
                 if (alternativa != null) {
-                    // evitar duplicados muy similares
-                    boolean dup = resultados.stream().anyMatch(r -> r.getNodos().equals(alternativa.getNodos()));
+                    boolean dup = resultados.stream()
+                            .anyMatch(r -> r.getTramos().equals(alternativa.getTramos()));
+
                     if (!dup) {
                         resultados.add(alternativa);
                         encontrada = true;
                     }
                 }
             }
+
             if (!encontrada) break; // no más alternativas
         }
         return resultados;
