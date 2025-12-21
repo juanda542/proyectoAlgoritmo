@@ -29,9 +29,12 @@ public class Main {
         List<Bus> buses = new ArrayList<>();
 
         Bus bus1 = new Bus(1, a, c, grafo.dijkstra(a.getId(), c.getId()), grafo.dijkstra(c.getId(), a.getId()));
-        bus1.iniciarRuta();
-
         buses.add(bus1);
+        //Ahora se anhade y se inicia la ruta de cada bus
+        for(Bus i: buses) {
+            i.iniciarRuta();
+        }
+        //bus1.iniciarRuta();
         
         
         // 2️⃣ Crear vista
@@ -47,7 +50,11 @@ public class Main {
         // sTimer para simular movimient
         new javax.swing.Timer(1000, e -> { // cada segundo = 10 minutos
         for (Bus h : buses) {
-            h.avanzar10Min();
+            //Si el bus termina el recorrido, se inicia su ruta de nuevo
+            if (h.avanzar10Min()) {
+                h.iniciarRuta();
+            }
+            //h.avanzar10Min();
         }
         view.setBuses(buses); // ahora sí actualiza la vista
         }
@@ -55,3 +62,4 @@ public class Main {
     }
     
 }
+
