@@ -86,8 +86,6 @@ public class Bus {
                 indiceActual++;
 
                 if (indiceActual >= rutaActual.getTramos().size()) {
-                    arcoActual = null;
-                    tiempoRestanteArco = 0;
                     return true;
                 }
 
@@ -139,3 +137,4 @@ public class Bus {
     return new Point(x, y);
 }
 }
+
