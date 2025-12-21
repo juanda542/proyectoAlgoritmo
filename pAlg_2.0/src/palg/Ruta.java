@@ -41,4 +41,19 @@ public class Ruta {
     public boolean estaVacia() {
         return arcos.isEmpty();
     }
+    
+    public String toString() {
+    StringBuilder sb = new StringBuilder();
+    for (Arco arco : arcos) {
+        sb.append(arco.getOrigen().getNombre())
+          .append("->")
+          .append(arco.getDestino().getNombre())
+          .append(" (")
+          .append(arco.getPeso())
+          .append(" min) ")
+          .append("\n");
+    }
+    
+    return sb.toString();
+    }
 }
