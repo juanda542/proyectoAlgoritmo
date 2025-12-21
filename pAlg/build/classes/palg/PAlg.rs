@@ -1,2 +1,0 @@
-palg.Main
-Main
