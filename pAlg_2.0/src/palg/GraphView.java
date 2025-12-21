@@ -46,6 +46,16 @@ public class GraphView extends JPanel {
         super.paintComponent(g); // Limpia el panel?
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        // Centro de la ventana
+        int centroX = getWidth() / 2;
+        int centroY = getHeight() / 2;
+        
+        int grafoCentroX = 300; 
+        int grafoCentroY = 250;
+        
+        g2.translate(centroX - grafoCentroX, centroY - grafoCentroY);
+        
         // Para cada paradero se piden sus cordenadas
         for (Paradero p : grafo.getParaderos()){ 
             int x1 = p.getX();
