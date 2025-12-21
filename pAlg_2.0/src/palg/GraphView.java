@@ -26,11 +26,11 @@ public class GraphView extends JPanel {
         this.setBackground(Color.WHITE);
         // es obligatorio poner try porque si no java da error tipo te obliga a manejar la posibilidad de que no este el archivo
         try {
-        imgBus = ImageIO.read(new File("bus1.png"));
+            imgBus = ImageIO.read(new File("bus1.png"));
         } catch (Exception ex) {
             throw new RuntimeException("No se pudo cargar la imagen del bus", ex);
-        }
-     }
+          }
+    }
        
     // actualiza la posicion de los buses cada vez que se mueven
     public void setBuses(List<Bus> buses) {
