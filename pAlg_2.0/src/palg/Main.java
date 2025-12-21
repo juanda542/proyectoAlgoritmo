@@ -12,7 +12,7 @@ import java.awt.*;
 public class Main {
     public static void main(String[] args) {
 
-        //1️⃣ Crear grafo
+        // Se crea el mapa id nombre cordenadas x y
         GrafoDirigido grafo = new GrafoDirigido();
         Paradero a = new Paradero(0, "A", 100, 100);
         Paradero b = new Paradero(1, "B", 300, 100);
@@ -21,7 +21,7 @@ public class Main {
         Paradero e = new Paradero(4, "E", 400, 300);
         Paradero f = new Paradero(5, "F", 150, 400);
 
-
+        // se añaden los paraderos
         grafo.agregarParadero(a);
         grafo.agregarParadero(b);
         grafo.agregarParadero(c);
@@ -30,7 +30,7 @@ public class Main {
         grafo.agregarParadero(f);
         
         
-            
+        // se añaden conexiones
         grafo.agregarArco(a.getId(), b.getId(), 10);
         grafo.agregarArco(a.getId(), c.getId(), 20);
         grafo.agregarArco(a.getId(), f.getId(), 25);
@@ -67,31 +67,100 @@ public class Main {
         }
         //bus1.iniciarRuta();
         
-        // crear ventana
+        // crear ventana simulacion
         JFrame frame = new JFrame("Simulación de Transporte Urbano");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
-        frame.setLocationRelativeTo(null);
-        frame.setLayout(new BorderLayout()); // primero layout
-
         
-        // Crear vista
+        frame.setLayout(new BorderLayout()); // primero layout
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setLocationRelativeTo(null);
+      
+        // Panel donde se dibuja el grafo y buses
+    
         GraphView view = new GraphView(grafo);
         view.setBuses(buses);
         frame.add(view, BorderLayout.CENTER);
-     
-        // Panel y botón
+        
+        // Panel y botón reanudar y detener
         JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton btnSimulacion = new JButton("Detener");
         btnSimulacion.setFocusable(false);
         panelBoton.add(btnSimulacion);
-        frame.add(panelBoton, BorderLayout.SOUTH); // botón abajo centrado
+        frame.add(panelBoton, BorderLayout.SOUTH); 
 
+        JButton btnConsultar = new JButton("Consultar ruta");
+        btnConsultar.setFocusable(false);
+        panelBoton.add(btnConsultar);
+        // Cuando se aprete el boton
+        btnConsultar.addActionListener(ev -> {
+         // se crea un panel de tamaño
+         JPanel panel = new JPanel(new GridLayout(2, 2, 5, 5));
+         
+         // cajas que reciben texto
+         JTextField eOrigen = new JTextField();
+         JTextField eDestino = new JTextField();
+         
+         // Se añade al pane etiqueta que dice paradero origen y estino y los cuadro que reciben texto
+         panel.add(new JLabel("Paradero origen:"));
+         panel.add(eOrigen);
+         panel.add(new JLabel("Paradero destino:"));
+         panel.add(eDestino);
+
+            // abre la ventana
+         int result = JOptionPane.showConfirmDialog(frame, panel, 
+            "Consultar Ruta", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+    if (result == JOptionPane.OK_OPTION) {
+        String origenStr = eOrigen.getText().trim();
+        String destinoStr = eDestino.getText().trim();
+
+        // Busca el paradero de origen
+        Paradero origen = null;
+        for (Paradero p : grafo.getParaderos()) {
+            if (p.getNombre().equalsIgnoreCase(origenStr)) {
+                origen = p;
+                break;
+            }
+        }
+            
+        // Busca el paradero destino
+        Paradero destino = null;
+        for (Paradero p : grafo.getParaderos()) {
+            if (p.getNombre().equalsIgnoreCase(destinoStr)) {
+                destino = p;
+                break;
+            }
+        }
+        
+        // Si es que existen los paraderos
+        if (origen != null && destino != null) {
+            List<Ruta> rutas = grafo.rutasAlternativas(origen.getId(), destino.getId(), 3);
+            // Si es que rutas no esta vacio osea
+            if (!rutas.isEmpty()) {
+                // si es que hay conexion se busca la ruta mas rapida
+                StringBuilder sb = new StringBuilder();
+                sb.append("Camino más corto:\n").append(rutas.get(0)).append("\n\n");
+        // imprimir hasta 2 rutas ya     
+        for (int i = 1; i < rutas.size() && i <= 2; i++) {
+                sb.append("Alternativa ").append(i).append(":\n").append(rutas.get(i)).append("\n\n");
+            }
+                JOptionPane.showMessageDialog(frame, sb.toString());
+                } else {
+                    JOptionPane.showMessageDialog(frame, "No hay ruta entre esos paraderos.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(frame, "Paradero origen o destino no válido.");
+                }
+            }
+        });
+        
+        
+        
         frame.setVisible(true); // al final
         
         
         // sTimer para simular movimient
-        javax.swing.Timer timer = new javax.swing.Timer(1000, ev -> { // cada segundo = 10 minutos
+        javax.swing.Timer timer = new javax.swing.Timer(200, ev -> { // cada segundo = 10 minutos
         for (Bus h : buses) {
             //Si el bus termina el recorrido, se inicia su ruta de nuevo
             if (h.avanzar10Min()) {
