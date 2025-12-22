@@ -85,11 +85,11 @@ class Main {
   +main(args : String[]) : void
 }
 
-GrafoDirigido --> Paradero
-GrafoDirigido --> Arco
-Ruta --> Arco
+GrafoDirigido --> Paradero: 1..*
+GrafoDirigido --> Arco: 0..*
+Ruta --> Arco: 1..*
 Arco --> Paradero
-Bus --> Ruta
+Bus --> Ruta: 1 ida / 1 vuelta
 Bus --> Paradero
 Bus --> Arco
 GraphView --> GrafoDirigido
