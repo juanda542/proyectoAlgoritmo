@@ -4,12 +4,11 @@
  */
 package palg;
 
-import java.util.List;
 import java.awt.Point;
 
 /**
- *
- * @author PC GAMER
+ *Representa los buses que recorren el grafo
+ * 
  */
 public class Bus {
 
@@ -29,7 +28,15 @@ public class Bus {
     private int tiempoAcumuladoMin;
     private int tiempoRestanteArco;
 
-        //Cambie constructor, se debe construir con OBJETOS RUTA, no LIST<ARCO>
+    /**
+     * Construye un bus con sus rutas de ida y vuelta ya calculadas.
+     *
+     * @param id identificador del bus
+     * @param paraderoOrigen paradero de inicio del recorrido
+     * @param paraderoLlegada paradero de término del recorrido
+     * @param rutaIda ruta desde el origen hasta el destino
+     * @param rutaVuelta ruta desde el destino hasta el origen
+     */    
     public Bus(int id, Paradero paraderoOrigen, Paradero paraderoLlegada, Ruta rutaIda, Ruta rutaVuelta) {
         this.id = id;
         this.paraderoOrigen = paraderoOrigen;
@@ -43,6 +50,14 @@ public class Bus {
         this.tiempoRestanteArco = 0;
     }
 
+    /**
+     * Inicia el recorrido del bus desde su paradero actual.
+     * 
+     * Si el bus se encuentra en el paradero de origen, comienza la ruta de ida.
+     * Si se encuentra en el paradero de llegada, comienza la ruta de vuelta.
+     *
+     * @return true si la ruta se inició correctamente, false en caso contrario
+     */
     public boolean iniciarRuta() {
 
         if (paraderoActual.equals(paraderoOrigen)) {
@@ -67,7 +82,13 @@ public class Bus {
     }
 
     /**
-     * @return true si llegó al final de la ruta, false si sigue en movimiento
+     * Avanza el estado del bus en un intervalo de 10 minutos de simulación.
+     * 
+     * El bus puede recorrer uno o más arcos dentro del mismo intervalo,
+     * dependiendo del tiempo restante de cada tramo.
+     *
+     * @return true si el bus llegó al final de la ruta,
+     * false si continúa en movimiento
      */
     public boolean avanzar10Min() {
 
@@ -97,29 +118,53 @@ public class Bus {
         return false;
     }
 
-    // Getters útiles
+    /**
+     * @return id del bus
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * @return paradero en el que se encuentra el bus
+     */
     public Paradero getParaderoActual() {
         return paraderoActual;
     }
 
+    /**
+    *@return arco actual, o null si el bus está detenido en un paradero
+    */
     public Arco getArcoActual() {
         return arcoActual;
     }
 
+    /**
+     * @return tiempo total del viaje
+     */
     public int getTiempoAcumuladoMin() {
         return tiempoAcumuladoMin;
     }
 
+    /**
+     * 
+     * @return true si esta en movimiento, false sino
+     */
     public boolean isEnMovimiento() {
         return arcoActual != null;
     }
     
     
     // point es una clase que representa cordendas (x,y)
+    /**
+     * Obtiene la posicion actual del bus en el plano.
+     * 
+     * Si el bus se encuentra detenido en un paradero, retorna las coordenadas
+     * del paradero. Si se encuentra en transito, interpola su posición entre
+     * el paradero de origen y destino del arco actual.
+     *
+     * @return posición actual del bus como un punto (x, y)
+     */
     public Point getPosicionActual() {
     if (arcoActual == null) {
         return new Point(paraderoActual.getX(), paraderoActual.getY());
@@ -135,5 +180,5 @@ public class Bus {
     int y = (int) (origen.getY() + (destino.getY() - origen.getY()) * ratio);
 
     return new Point(x, y);
-}
+    }
 }

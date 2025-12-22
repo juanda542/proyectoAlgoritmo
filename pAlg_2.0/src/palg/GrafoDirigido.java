@@ -3,21 +3,37 @@ package palg;
 import java.util.*;
 
 
-
+/**
+ * Grafo dirigido y ponderado que representa una red de paraderos.
+ * Permite calcular rutas optimas y rutas alternativas entre nodos.
+ */
 public class GrafoDirigido {
     private final Map<Integer, Paradero> paraderos;
     private final Map<Paradero, List<Arco>> adyacencia;
 
+    /**
+     * Construye un grafo dirigido vacio.
+     */
     public GrafoDirigido() {
         this.paraderos = new HashMap<>();
         this.adyacencia = new HashMap<>();
     }
 
+    /**
+     * Agrega un paradero al grafo.
+     * @param p paradero a agregar
+     */
     public void agregarParadero(Paradero p) {
         paraderos.putIfAbsent(p.getId(), p);
         adyacencia.putIfAbsent(p, new ArrayList<>());
     }
 
+    /**
+     * Agrega un arco dirigido con peso entre dos paraderos.
+     * @param idOrigen id del paradero origen
+     * @param idDestino id del paradero destino
+     * @param peso costo del arco
+     */
     public void agregarArco(int idOrigen, int idDestino, int peso) {
         Paradero o = paraderos.get(idOrigen);
         Paradero d = paraderos.get(idDestino);
@@ -36,6 +52,12 @@ public class GrafoDirigido {
     }
 
     // DIJKSTRA: devuelve Ruta con nodos y costo
+    /**
+     * Calcula la ruta de menor costo entre dos paraderos usando Dijkstra.
+     * @param idOrigen id del paradero origen
+     * @param idDestino id del paradero destino
+     * @return ruta de menor costo o null si no existe
+     */
     public Ruta dijkstra(int idOrigen, int idDestino) {
         Paradero origen = paraderos.get(idOrigen);
         Paradero destino = paraderos.get(idDestino);
@@ -97,8 +119,13 @@ public class GrafoDirigido {
         return ruta;
     }
 
-    // Rutas alternativas (heurística simple): para k alternativas, eliminamos temporalmente cada arco
-    // del camino encontrado y recalculamos Dijkstra. No es Yen completo pero devuelve alternativas.
+    /**
+     * Calcula rutas alternativas entre dos paraderos.
+     * @param idOrigen id del paradero origen
+     * @param idDestino id del paradero destino
+     * @param k cantidad maxima de rutas
+     * @return lista de rutas encontradas
+     */
     public List<Ruta> rutasAlternativas(int idOrigen, int idDestino, int k) {
         List<Ruta> resultados = new ArrayList<>();
         Ruta principal = dijkstra(idOrigen, idDestino);
@@ -157,23 +184,41 @@ public class GrafoDirigido {
         return resultados;
     }
 
+    /**
+     * Indica si existe conexion entre dos paraderos.
+     * @param idOrigen id del paradero origen
+     * @param idDestino id del paradero destino
+     * @return true si existe ruta, false en caso contrario
+     */
     public boolean existeConexion(int idOrigen, int idDestino) {
         return dijkstra(idOrigen, idDestino) != null;
     }
 
-    // utilitario: obtener paradero por id
+    /**
+     * Obtiene un paradero por su id.
+     * @param id id del paradero
+     * @return paradero asociado o null si no existe
+     */
     public Paradero getParadero(int id) { 
         return paraderos.get(id); 
     }
+    
+    /**
+     * Obtiene todos los paraderos del grafo.
+     * @return lista de paraderos
+     */
     public List<Paradero> getParaderos() {
         return new ArrayList<>(paraderos.values());
     }
     
+    /**
+     * Obtiene los arcos salientes de un paradero.
+     * @param p paradero consultado
+     * @return lista de arcos salientes
+     */
     public List<Arco> getArcosParadero(Paradero p) {
     return adyacencia.get(p);
     }
-
-    
 }
 
     

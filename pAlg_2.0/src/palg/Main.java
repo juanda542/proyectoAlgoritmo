@@ -160,7 +160,7 @@ public class Main {
         
         
         // sTimer para simular movimient
-        javax.swing.Timer timer = new javax.swing.Timer(200, ev -> { // cada segundo = 10 minutos
+        javax.swing.Timer timer = new javax.swing.Timer(1000, ev -> { // cada segundo = 10 minutos
         for (Bus h : buses) {
             //Si el bus termina el recorrido, se inicia su ruta de nuevo
             if (h.avanzar10Min()) {

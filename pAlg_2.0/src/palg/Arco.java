@@ -2,7 +2,8 @@ package palg;
 
 /**
  * Representa un arco dirigido entre dos paraderos.
- * El peso representa, por ejemplo, tiempo en minutos para recorrer la calle.
+ * El peso representa el tiempo en minutos para recorrer la calle.
+ * 
  */
 public class Arco {
     private final Paradero origen;

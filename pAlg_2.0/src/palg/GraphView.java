@@ -11,7 +11,13 @@ import java.util.ArrayList;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
+
 /**
+ * Vista grafica del grafo y de los buses.
+ *
+ * Esta clase se encarga de dibujar los paraderos, las conexiones entre ellos
+ * y la posicion actual de los buses dentro del grafo.
+ * Extiende JPanel y utiliza la libreria Swing para el renderizado.
  *
  * @author juand
  */
@@ -21,6 +27,10 @@ public class GraphView extends JPanel {
     private List<Bus> buses = new ArrayList<>();
     private BufferedImage imgBus;
 
+    /**
+     * Construye la vista grafica asociada a un grafo.
+     * @param grafo grafo a representar
+     */
     public GraphView(GrafoDirigido grafo){ 
         this.grafo = grafo;
         this.setBackground(Color.WHITE);
@@ -33,14 +43,20 @@ public class GraphView extends JPanel {
     }
        
     // actualiza la posicion de los buses cada vez que se mueven
+    /**
+     * Actualiza la lista de buses a dibujar.
+     * @param buses lista de buses
+     */
     public void setBuses(List<Bus> buses) {
     this.buses = buses;
     repaint(); // redibuja con la posición actual de los buses
 }
-    
-    /* Metodo de swing (No se puede cambiar el nombre pero se encarga de dibujar el panel(contenedor) donde se dibuja el grafo
-     Graphics g es el que se encarga de dibujar todo
-    */
+
+    /**
+     * Dibuja el grafo y los buses en el panel.
+     * Metodo propio de Swing que se ejecuta automaticamente
+     * cada vez que el panel se redibuja.
+     */
     @Override
     protected void paintComponent(Graphics g){ 
         super.paintComponent(g); // Limpia el panel?
@@ -99,10 +115,8 @@ public class GraphView extends JPanel {
             g2.setColor(Color.DARK_GRAY);
             g2.drawString("Bus " + b.getId(), pos.x - 15, pos.y + 25);
         }
-        
-    }
-    
-            
+   
+    }       
 }
 
 
