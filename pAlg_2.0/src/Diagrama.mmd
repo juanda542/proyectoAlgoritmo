@@ -1,0 +1,99 @@
+classDiagram
+
+class Paradero {
+  -id : int
+  -nombre : String
+  -x : int
+  -y : int
+  +Paradero(id : int, nombre : String, x : int, y : int)
+  +getId() : int
+  +getNombre() : String
+  +getX() : int
+  +getY() : int
+  +toString() : String
+  +equals(o : Object) : boolean
+  +hashCode() : int
+}
+
+class Arco {
+  -origen : Paradero
+  -destino : Paradero
+  -peso : int
+  +Arco(origen : Paradero, destino : Paradero, peso : int)
+  +getOrigen() : Paradero
+  +getDestino() : Paradero
+  +getPeso() : int
+  +toString() : String
+}
+
+class Ruta {
+  -arcos : List
+  -costoTotal : int
+  +Ruta(arcos : List)
+  +getTramos() : List
+  +getArcoIndex(i : int) : Arco
+  +getCostoTotal() : int
+  +estaVacia() : boolean
+  +toString() : String
+}
+
+class GrafoDirigido {
+  -paraderos : Map
+  -adyacencia : Map
+  +GrafoDirigido()
+  +agregarParadero(p : Paradero)
+  +agregarArco(idOrigen : int, idDestino : int, peso : int)
+  +imprimirGrafo()
+  +dijkstra(idOrigen : int, idDestino : int) : Ruta
+  +rutasAlternativas(idOrigen : int, idDestino : int, k : int) : List
+  +existeConexion(idOrigen : int, idDestino : int) : boolean
+  +getParadero(id : int) : Paradero
+  +getParaderos() : List
+  +getArcosParadero(p : Paradero) : List
+}
+
+class Bus {
+  -id : int
+  -paraderoOrigen : Paradero
+  -paraderoLlegada : Paradero
+  -paraderoActual : Paradero
+  -rutaIda : Ruta
+  -rutaVuelta : Ruta
+  -rutaActual : Ruta
+  -arcoActual : Arco
+  -indiceActual : int
+  -tiempoAcumuladoMin : int
+  -tiempoRestanteArco : int
+  +Bus(id : int, origen : Paradero, destino : Paradero, ida : Ruta, vuelta : Ruta)
+  +iniciarRuta() : boolean
+  +avanzar10Min() : boolean
+  +getId() : int
+  +getParaderoActual() : Paradero
+  +getArcoActual() : Arco
+  +getTiempoAcumuladoMin() : int
+  +isEnMovimiento() : boolean
+}
+
+class GraphView {
+  -grafo : GrafoDirigido
+  -buses : List
+  +GraphView(grafo : GrafoDirigido)
+  +setBuses(buses : List)
+}
+
+class Main {
+  +main(args : String[]) : void
+}
+
+GrafoDirigido --> Paradero
+GrafoDirigido --> Arco
+Ruta --> Arco
+Arco --> Paradero
+Bus --> Ruta
+Bus --> Paradero
+Bus --> Arco
+GraphView --> GrafoDirigido
+GraphView --> Bus
+Main --> GrafoDirigido
+Main --> Bus
+Main --> GraphView
